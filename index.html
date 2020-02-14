@@ -1,0 +1,62 @@
+<script src="/verovio-toolkit-proxy.js"></script>
+<script src="/verovio-toolkit-2.5.0.js"></script>
+
+<h1>Toolkit</h1>
+<div id="toolkit"></div>
+<script>
+    console.log('Run verovio in default mode');
+    Module.onRuntimeInitialized = function () {
+        var toolkit = new verovio.toolkit();
+        (async () => {
+            // Fetch a MEI file
+            const response = await fetch('file.mei');
+            const data = await response.text();
+            toolkit.setOptions({
+                width: 500,
+                height: 500,
+                scale: 30,
+                adjustPageHeight: true,
+                // breaks: 'none',
+            });
+            toolkit.loadData(data);
+            const svg = toolkit.renderToSVG(1);
+            document.getElementById('toolkit').innerHTML = svg;
+        })();
+    };
+</script>
+
+
+<h1>Worker</h1>
+<div id="worker"></div>
+<script>
+    console.log('Run verovio as a worker');
+    // Create a new instance of VerovioToolkitProxy
+    const proxy = new VerovioToolkitProxy();
+    
+    // Listen and wait for Module to emit onRuntimeInitialized
+    proxy.onRuntimeInitialized().then(async () => {
+        
+        // Fetch a MEI file
+        const response = await fetch('file.mei');
+        const data = await response.text();
+
+        // Set inner HTML of #score to verovio response
+        // Note that method calls on VerovioToolkitProxy instances are asynchronous
+        // and will return Promises. So the must be awaited with the `await`
+        // keyword or `.then(() => {...})`
+        console.log('setOptions');
+        await proxy.setOptions({
+            width: 500,
+            height: 500,
+            scale: 30,
+            adjustPageHeight: true,
+            // breaks: 'none',
+        });
+        console.log('loadData');
+        await proxy.loadData(data);
+        console.log('renderToSVG');
+        const svg = await proxy.renderToSVG(1);
+        console.log(svg);
+        document.getElementById('worker').innerHTML = svg;
+    });
+</script>
