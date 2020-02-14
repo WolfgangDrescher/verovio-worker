@@ -55,7 +55,7 @@ if (typeof WorkerGlobalScope !== 'undefined' && self instanceof WorkerGlobalScop
         let result;
         if(fn) {
             // Call verovio toolkit method and pass arguments
-            result = fn.apply(null, arguments || []);
+            result = fn.apply(verovioToolkit, arguments || []);
         }
 
         // Always respond to worker calls with postMessage
