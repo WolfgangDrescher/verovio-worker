@@ -1,5 +1,5 @@
 try {
-    importScripts("verovio-toolkit-2.5.0.js");
+    importScripts("node_modules/verovio/index.js");
     // importScripts('https://www.verovio.org/javascript/develop/verovio-toolkit-wasm.js');
 } catch (e) {
     console.error(e);
